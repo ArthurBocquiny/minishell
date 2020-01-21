@@ -6,7 +6,7 @@
 #    By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/11 17:18:28 by arbocqui          #+#    #+#              #
-#    Updated: 2019/11/21 11:05:02 by arbocqui         ###   ########.fr        #
+#    Updated: 2020/01/20 14:16:14 by arbocqui         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,12 @@ FLAGS = -Wall -Werror -Wextra
 INC = -I ./includes/ -I ./$(LIBFT_PATH)/
 
 SRCS_NAME = main.c \
+			display.c \
+			display_misc.c \
+			env.c \
+			env_misc.c \
+			error.c \
+			finder.c
 
 SRCS = $(addprefix $(SRCS_PATH), $(SRCS_NAME))
 OBJ = $(addprefix $(OBJ_PATH), $(SRCS_NAME:.c=.o))
