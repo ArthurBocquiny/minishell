@@ -100,7 +100,7 @@ $(NAME): bin  $(OBJ)
 	@printf "$(GREEN) LIBFT DONE SUCESS! $(END_COLOR)"
 
 $(BIN_FOLDER)%.o :%.c
-	@gcc $< -c -I $(HEADER) -o $@ -Wall -Wextra -Werror
+	@gcc $< -c -I $(HEADER) -o $@ ##-Wall -Wextra -Werror
 	@printf "$(YELLOW) Compiling:$(END_COLOR) $<  $(GREEN)[OK] $(END_COLOR)              \r"
 
 clean:
