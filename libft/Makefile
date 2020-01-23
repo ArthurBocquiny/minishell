@@ -74,11 +74,10 @@ SRC = ft_strlen.c \
 	  ft_lstadd.c \
 	  ft_lstiter.c \
 	  ft_unused.c \
-	  ft_putstr_color.c \
 	  get_next_line.c \
 	  ft_free_tab.c
 
-HEADER = libft.h
+HEADER = /usr/local/include/libft.h
 
 BIN_FOLDER = ./bin/
 
@@ -100,7 +99,7 @@ $(NAME): bin  $(OBJ)
 	@printf "$(GREEN) LIBFT DONE SUCESS! $(END_COLOR)"
 
 $(BIN_FOLDER)%.o :%.c
-	@gcc $< -c -I $(HEADER) -o $@ ##-Wall -Wextra -Werror
+	@gcc $< -c -I $(HEADER) -o $@ -Wall -Wextra -Werror
 	@printf "$(YELLOW) Compiling:$(END_COLOR) $<  $(GREEN)[OK] $(END_COLOR)              \r"
 
 clean:
