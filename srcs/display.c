@@ -37,10 +37,8 @@ void	display_command(char **av, char *right_path, char **env)
 		wait(0);
 	if (pid == 0)
 	{
-		if (execve(binary_path, av, env) != -1)
-			execve(binary_path, av, env);
-		else if (execve(binary_path, av, env) == -1)
-			execve(av[0], av, env);
+		if (execve(binary_path, av, env) == -1 && execve(av[0], av, env) == -1)
+			exit(0);
 	}
 }
 

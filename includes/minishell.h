@@ -41,7 +41,6 @@ void						display_command(char **av, char *right_path, char
 int							display_builtin(char **av, char ***env);
 void						cd_para(char *path, char **env);
 
-
 char						**cpy_env(char **env, int nb);
 void						set_env(char ***env, char **av);
 void						unset_env(char ***env, char **av);

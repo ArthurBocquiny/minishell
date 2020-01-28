@@ -74,11 +74,10 @@ SRC = ft_strlen.c \
 	  ft_lstadd.c \
 	  ft_lstiter.c \
 	  ft_unused.c \
-	  ft_putstr_color.c \
 	  get_next_line.c \
 	  ft_free_tab.c
 
-HEADER = libft.h
+HEADER = /usr/local/include/libft.h
 
 BIN_FOLDER = ./bin/
 
