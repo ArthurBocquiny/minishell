@@ -82,6 +82,66 @@ void    exec_env(char **av, int index, char **env_cpy, char **env)
         display_command(exec_arg, right_path, env_cpy);
 }
 
+char	**add_var_env(char *av, char **env_cpy)
+{
+	int		i;
+	char	**new_env;
+
+	i = 0;
+	new_env = NULL;
+	if (!(new_env = (char**)malloc(sizeof(char*) * (len_tab(env_cpy) + 2))))
+		return (NULL);
+	while (env_cpy[i])
+	{
+		new_env[i] = ft_strdup(env_cpy[i]);
+		//ft_strdel(&env_cpy[i]);
+		i++;
+	}
+//	ft_strdel(&env_cpy[i]);
+//	free(env_cpy);
+	new_env[i++] = ft_strdup(av);
+	new_env[i] = 0;
+	return (new_env);
+}
+
+char	**create_exec(char **av, int index)
+{
+	char	**exec;
+	int		i;
+	int		len;
+
+	exec = NULL;
+	i = index - 1;
+	len = 0;
+	while (av[++i])
+		len++;
+	if (!(exec = (char**)malloc(sizeof(char*) * (len + 1))))
+		return (NULL);
+	i = index;
+	len = 0;
+	while (av[i])
+	{
+		exec[len] = ft_strdup(av[i]);
+		len++;
+		i++;
+	}
+	exec[len] = 0;
+	return (exec);
+}
+
+void	exec_env(char **av, int index, char **env_cpy, char **env)
+{
+	char	**all_path;
+	char	*right_path;
+	char	**exec_arg;
+
+	exec_arg = NULL;
+	all_path = get_all_paths(find_path(env));
+	right_path = get_right_path(all_path, av[index]);
+	exec_arg = create_exec(av, index);
+	display_command(exec_arg, right_path, env_cpy);
+}
+
 void	display_env(char **env, char **av)
 {
 	int             i;
