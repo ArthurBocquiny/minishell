@@ -36,7 +36,7 @@ char						*read_line(void);
 
 void						display_prompt(void);
 void						display_line(char *line);
-void						display_command(char **av, char *right_path, char
+int						display_command(char **av, char *right_path, char
 							**env);
 int							display_builtin(char **av, char ***env);
 void						cd_para(char *path, char **env);

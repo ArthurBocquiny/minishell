@@ -23,7 +23,7 @@ void	display_line(char *line)
 	ft_putchar('\n');
 }
 
-void	display_command(char **av, char *right_path, char **env)
+int		display_command(char **av, char *right_path, char **env)
 {
 	pid_t	pid;
 	char	*binary_path;
@@ -38,8 +38,9 @@ void	display_command(char **av, char *right_path, char **env)
 	if (pid == 0)
 	{
 		if (execve(binary_path, av, env) == -1 && execve(av[0], av, env) == -1)
-			exit(0);
+			return(0);
 	}
+	return (1);
 }
 
 void	display_echo(char **av)
