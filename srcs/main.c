@@ -12,19 +12,100 @@
 
 #include <minishell.h>
 
+char	*cpy_exceptfirst(char *arg)
+{
+	char	*new;
+	int		i;
+	int		j;
+
+	i = 1;
+	j = 0;
+	if (!(new = (char*)malloc(sizeof(char) * (ft_strlen(arg) + 1))))
+		return (NULL);
+	while (arg[i])
+	{
+		new[j] = arg[i];
+		i++;
+		j++;
+	}
+	new[j] = '\0';
+	return (new);
+}
+
+int		check_varenv(char *var, char *tmp)
+{
+	int		i;
+
+	i = -1;
+	while (var[++i] != '=' && var[i])
+	{
+		if (var[i] != tmp[i])
+			return (0);
+	}
+	return (1);
+}
+
+char	*cpy_valuevar(char **env, char *tmp)
+{
+	char	*new;
+	int		i;
+	int		j;
+
+	i = -1;
+	j = 0;
+	new = NULL;
+	while (env[++i])
+	{
+		if (check_varenv(env[i], tmp) == 1)
+		{
+			if (!(new = (char*)malloc(sizeof(char) * (ft_strlen(env[i]) - ft_strlen(tmp)))))
+				return (NULL);
+			while (*env[i] != '=')
+				env[i]++;
+			env[i]++;
+			while (*env[i])
+			{
+				new[j] = *env[i];
+				j++;
+				env[i]++;
+			}
+			ft_strdel(&tmp);
+			return (new);
+		}
+	}
+	ft_strdel(&tmp);
+	return (new);
+}
+
 char	**parse_line(char *line, char **env)
 {
 	char 	**new_arg;
 	int		i;
+	char	*tmp;
 
+	tmp = NULL;
 	i = -1;
 	new_arg = ft_strsplit(line, ' ');
 	while (new_arg[++i])
 	{
-		if (new_arg[i][0] == '~')
+		if (new_arg[i][0] == '~' && !new_arg[i][1])
 		{
 			ft_strdel(&new_arg[i]);
 			new_arg[i] = ft_strdup(find_home(env));
+		}
+		else if (new_arg[i][0] == '~' && new_arg[i][1])
+		{
+			tmp = cpy_exceptfirst(new_arg[i]);
+			ft_strdel(&new_arg[i]);
+			new_arg[i] = ft_strjoin("/home/", tmp);
+		}
+		else if (new_arg[i][0] == '$' && new_arg[i][1])
+		{
+			tmp = cpy_exceptfirst(new_arg[i]);
+			ft_strdel(&new_arg[i]);
+			tmp = cpy_valuevar(env, tmp);
+			if (tmp != NULL)
+				new_arg[i] = ft_strdup(tmp);
 		}
 	}
 	return (new_arg);

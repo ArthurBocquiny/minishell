@@ -48,8 +48,6 @@ void	display_echo(char **av)
 	int		i;
 
 	i = 1;
-	if (ft_strcmp(av[1], "-n") == 0)
-		i++;
 	while (av[i])
 	{
 		ft_putstr(av[i]);
@@ -64,8 +62,7 @@ int		display_builtin(char **av, char ***env)
 	if (ft_strcmp(av[0], "echo") == 0)
 	{
 		display_echo(av);
-		if (ft_strcmp(av[1], "-n") != 0)
-			ft_putchar('\n');
+		ft_putchar('\n');
 		return (1);
 	}
 	else if (ft_strcmp(av[0], "cd") == 0)
