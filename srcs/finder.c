@@ -6,7 +6,7 @@
 /*   By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/20 13:07:24 by arbocqui          #+#    #+#             */
-/*   Updated: 2020/01/20 14:30:51 by arbocqui         ###   ########.fr       */
+/*   Updated: 2020/02/25 19:30:58 by arbocqui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ char	*get_right_path(char **all_path, char *binary)
 	int				i;
 
 	i = 0;
+	if (!all_path)
+		return (NULL);
 	while (all_path[i])
 	{
 		if (!(files = opendir(all_path[i])))
@@ -44,6 +46,21 @@ char	*get_right_path(char **all_path, char *binary)
 			closedir(files);
 			i++;
 		}
+	}
+	return (NULL);
+}
+
+char	*find_oldpwd(char **env)
+{
+	int		i;
+
+	i = 0;
+	while (env[i])
+	{
+		if (env[i][0] == 'O' && env[i][1] == 'L' && env[i][2] == 'D'
+			&& env[i][3] == 'P' && env[i][4] == 'W' && env[i][5] == 'D')
+			return (env[i] + 7);
+		i++;
 	}
 	return (NULL);
 }

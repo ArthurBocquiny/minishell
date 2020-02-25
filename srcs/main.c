@@ -6,7 +6,7 @@
 /*   By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/11 17:22:05 by arbocqui          #+#    #+#             */
-/*   Updated: 2020/01/21 16:04:29 by arbocqui         ###   ########.fr       */
+/*   Updated: 2020/02/25 19:27:47 by arbocqui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,26 @@ char	*cpy_valuevar(char **env, char *tmp)
 	return (new);
 }
 
+char	*transform_line(char *line)
+{
+	int		i;
+	char	*new;
+
+	i = 0;
+	if (!(new = (char*)malloc(sizeof(char) * (ft_strlen(line) + 1))))
+		return (NULL);
+	while (line[i])
+	{
+		if (line[i] == '\t' || line[i] == '"')
+			new[i] = ' ';
+		else
+			new[i] = line[i];
+		i++;
+	}
+	new[i] = '\0';
+	return (new);
+}
+
 char	**parse_line(char *line, char **env)
 {
 	char 	**new_arg;
@@ -85,6 +105,7 @@ char	**parse_line(char *line, char **env)
 
 	tmp = NULL;
 	i = -1;
+	line = transform_line(line);
 	new_arg = ft_strsplit(line, ' ');
 	while (new_arg[++i])
 	{
@@ -111,6 +132,15 @@ char	**parse_line(char *line, char **env)
 	return (new_arg);
 }
 
+int		not_a_builtin(char **av)
+{
+	if (ft_strcmp(av[0], "cd") == 0 || ft_strcmp(av[0], "env") == 0
+	|| ft_strcmp(av[0], "setenv") == 0 || ft_strcmp(av[0], "unsetenv") == 0
+	|| ft_strcmp(av[0], "echo") == 0 || ft_strcmp(av[0], "exit") == 0)
+			return (0);
+	return (1);
+}
+
 void	loop(char **env)
 {
 	char	*line;
@@ -131,9 +161,9 @@ void	loop(char **env)
 		{
 			right_path = get_right_path(all_path, av[0]);
 			if (display_builtin(av, &env) == 1)
-			{
-			}
-			else if (display_command(av, right_path, env) == 0)
+				ft_putstr("");
+			else if (not_a_builtin(av) == 1
+			&& display_command(av, right_path, env) == 0)
 			{
 				ft_putstr(av[0]);
 				ft_putstr(": command not found\n");

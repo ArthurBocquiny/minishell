@@ -6,7 +6,7 @@
 #    By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/08 14:02:00 by arbocqui          #+#    #+#              #
-#    Updated: 2019/11/21 14:42:20 by arbocqui         ###   ########.fr        #
+#    Updated: 2020/02/25 13:56:39 by arbocqui         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,7 +77,7 @@ SRC = ft_strlen.c \
 	  get_next_line.c \
 	  ft_free_tab.c
 
-HEADER = /usr/local/include/libft.h
+HEADER = libft.h
 
 BIN_FOLDER = ./bin/
 

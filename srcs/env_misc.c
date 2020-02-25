@@ -6,7 +6,7 @@
 /*   By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/20 13:05:57 by arbocqui          #+#    #+#             */
-/*   Updated: 2020/01/21 16:06:18 by arbocqui         ###   ########.fr       */
+/*   Updated: 2020/02/25 17:35:55 by arbocqui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char	**create_exec(char **av, int index)
 	return (exec);
 }
 
-void	exec_env(char **av, int index, char **env_cpy, char **env)
+void		exec_env(char **av, int index, char **env_cpy, char **env)
 {
 	char	**all_path;
 	char	*right_path;
@@ -79,7 +79,12 @@ void	exec_env(char **av, int index, char **env_cpy, char **env)
 	all_path = get_all_paths(find_path(env));
 	right_path = get_right_path(all_path, av[index]);
 	exec_arg = create_exec(av, index);
-	display_command(exec_arg, right_path, env_cpy);
+	if (display_command(exec_arg, right_path, env_cpy) == 0)
+	{
+		ft_putstr(exec_arg[0]);
+		ft_putstr(": command not found\n");
+		exit(0);
+	}
 }
 
 void	display_env(char **env, char **av)
@@ -93,8 +98,12 @@ void	display_env(char **env, char **av)
     i = 1;
     j = -1;
     env_cpy = cpy_env(env, 0);
-    while (av[i])
-    {
+	if (ft_strcmp(av[0], "env") == 0 && !av[1])
+		display_table(env);
+   else
+   {
+		while (av[i])
+		{
             if ((av[i][0] == '-' && !av[i][1]) || ft_strcmp(av[i], "-i") == 0)
             {
                     while (env_cpy[++j])
@@ -108,9 +117,10 @@ void	display_env(char **env, char **av)
                     nb_ex++;
             }
             i++;
-    }
-      if (nb_ex == 0)
-              exec_env(av, 0, env_cpy, env);
+		}
+		if (nb_ex == 0)
+			exec_env(av, 0, env_cpy, env);
+   }
 }
 
 char	**cpy_env(char **env, int nb)

@@ -6,7 +6,7 @@
 /*   By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/20 12:52:38 by arbocqui          #+#    #+#             */
-/*   Updated: 2020/01/21 16:06:15 by arbocqui         ###   ########.fr       */
+/*   Updated: 2020/02/25 19:57:07 by arbocqui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,18 @@ void	display_echo(char **av)
 	}
 }
 
+void	display_table(char **tab)
+{
+	int		i;
+
+	i = -1;
+	while (tab[++i])
+	{
+		ft_putstr(tab[i]);
+		ft_putchar('\n');
+	}
+}
+
 int		display_builtin(char **av, char ***env)
 {
 	if (ft_strcmp(av[0], "echo") == 0)
@@ -67,18 +79,36 @@ int		display_builtin(char **av, char ***env)
 	}
 	else if (ft_strcmp(av[0], "cd") == 0)
 	{
-		cd_para(av[1], *env);
+		if (av[2])
+		{
+			ft_putstr("cd: Too many arguments.\n");
+			return (0);
+		}
+		cd_para(av[1], env);
 		return (1);
 	}
 	else if (ft_strcmp(av[0], "exit") == 0)
 		exit(0);
 	else if (ft_strcmp(av[0], "setenv") == 0)
 	{
-		set_env(env, av);
+		if (len_tab(av) > 3)
+		{
+			ft_putstr("setenv: Too many arguments.\n");
+			return(0);
+		}
+		if (!av[1])
+			display_table(*env);
+		else
+			set_env(env, av[1], av[2]);
 		return (1);
 	}
 	else if (ft_strcmp(av[0], "unsetenv") == 0)
 	{
+		if (!av[1])
+		{
+			ft_putstr("unsetenv: Too few arguments.\n");
+			return (0);
+		}
 		unset_env(env, av);
 		return (1);
 	}
