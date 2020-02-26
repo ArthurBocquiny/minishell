@@ -6,7 +6,7 @@
 /*   By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/11 17:22:05 by arbocqui          #+#    #+#             */
-/*   Updated: 2020/02/25 19:27:47 by arbocqui         ###   ########.fr       */
+/*   Updated: 2020/02/26 20:13:51 by arbocqui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ char	**parse_line(char *line, char **env)
 	i = -1;
 	line = transform_line(line);
 	new_arg = ft_strsplit(line, ' ');
+	ft_strdel(&line);
 	while (new_arg[++i])
 	{
 		if (new_arg[i][0] == '~' && !new_arg[i][1])
@@ -170,6 +171,10 @@ void	loop(char **env)
 				exit(0);
 			}
 		}
+		ft_strdel(&line);
+		ft_free_tab(av);
+		if (all_path)
+			ft_free_tab(all_path);
 	}
 }
 

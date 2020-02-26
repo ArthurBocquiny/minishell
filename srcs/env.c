@@ -6,7 +6,7 @@
 /*   By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/20 12:56:34 by arbocqui          #+#    #+#             */
-/*   Updated: 2020/02/25 19:57:04 by arbocqui         ###   ########.fr       */
+/*   Updated: 2020/02/26 20:13:55 by arbocqui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ int		check_var_exist(char **env, char *var_name)
 	diff = 0;
 	while (env[++i])
 	{
-		while (env[i][j] != '=')
+		while (env[i][j] != '=' && var_name[j])
 		{
 			if (env[i][j] != var_name[j])
 				diff++;
 			j++;
 		}
-		if (diff == 0)
+		if (diff == 0 && !var_name[j] && env[i][j] == '=')
 			return (i);
 		j = 0;
 		diff = 0;
@@ -37,18 +37,42 @@ int		check_var_exist(char **env, char *var_name)
 	return (-1);
 }
 
+int		check_var_alpha(char *var)
+{
+	int		i;
+
+	i = -1;
+	while (var[++i])
+	{
+		if (ft_isalpha(var[i]) == 0)
+			return (0);
+	}
+	return (1);
+}
+
 void	create_new_var(char ***env, char *av1, char *av2)
 {
 	char	**env_cpy;
 	int		i;
 	char	*var;
+	char	*tmp;
 
 	i = 0;
 	env_cpy = cpy_env(*env, 1);
 	var = NULL;
-	var = ft_strjoin(av1, "=");
+	if (av1 && check_var_alpha(av1))
+		tmp = ft_strjoin(av1, "=");
+	else
+	{
+		ft_putstr("setenv: Must only contains alphanumeric characters.\n");
+		ft_free_tab(env_cpy);
+		return ;
+	}
 	if (av2)
-		var = ft_strjoin(var, av2);
+		var = ft_strjoin(tmp, av2);
+	else
+		var = ft_strdup(tmp);
+	ft_strdel(&tmp);
 	while (env_cpy[i])
 		i++;
 	env_cpy[i++] = ft_strdup(var);
@@ -62,14 +86,20 @@ void	change_var(char ***env, char *av1, char *av2)
 {
 	int		i;
 	char	*tmp;
+	char	*tmp2;
 	char	**env_cpy;
-
+	
 	i = check_var_exist(*env, av1);
-	tmp = ft_strjoin(av1, "=");
-	tmp = ft_strjoin(tmp, av2);
-	env_cpy = cpy_env(*env, 1);
+	tmp2 = ft_strjoin(av1, "=");
+	if (av2)
+		tmp = ft_strjoin(tmp2, av2);
+	else
+		tmp = ft_strdup(tmp2);
+	ft_strdel(&tmp2);
+	env_cpy = cpy_env(*env, 0);
+	ft_strdel(&env_cpy[i]);
 	env_cpy[i] = ft_strdup(tmp);
-	free(tmp);
+	ft_strdel(&tmp);
 	ft_free_tab(*env);
 	*env = env_cpy;
 }
@@ -132,8 +162,10 @@ void	unset_env(char ***env, char **av)
 		if (not_cpy(split[0], av) != 0)
 			tab[j++] = ft_strdup(env_cpy[i]);
 		i++;
+		ft_free_tab(split);
 	}
 	tab[j] = 0;
 	ft_free_tab(*env);
+	ft_free_tab(env_cpy);
 	*env = tab;
 }

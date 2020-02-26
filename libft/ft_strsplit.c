@@ -6,7 +6,7 @@
 /*   By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/26 21:06:21 by arbocqui          #+#    #+#             */
-/*   Updated: 2018/12/04 17:55:37 by arbocqui         ###   ########.fr       */
+/*   Updated: 2020/02/26 18:26:18 by arbocqui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static	char	**ft_malloc_words(char const *str, char **table, char c)
 				i++;
 		}
 	}
-	if (!(table = (char**)malloc(sizeof(char*) * nb_words + 1)))
+	if (!(table = (char**)malloc(sizeof(char*) * (nb_words + 1))))
 		return (0);
 	table[nb_words] = 0;
 	return (table);

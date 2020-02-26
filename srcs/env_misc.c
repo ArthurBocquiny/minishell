@@ -6,7 +6,7 @@
 /*   By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/20 13:05:57 by arbocqui          #+#    #+#             */
-/*   Updated: 2020/02/25 17:35:55 by arbocqui         ###   ########.fr       */
+/*   Updated: 2020/02/26 19:00:09 by arbocqui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,9 @@ char	**add_var_env(char *av, char **env_cpy)
 	while (env_cpy[i])
 	{
 		new_env[i] = ft_strdup(env_cpy[i]);
-		//ft_strdel(&env_cpy[i]);
 		i++;
 	}
-//	ft_strdel(&env_cpy[i]);
-//	free(env_cpy);
+	ft_free_tab(env_cpy);
 	new_env[i++] = ft_strdup(av);
 	new_env[i] = 0;
 	return (new_env);
@@ -85,42 +83,48 @@ void		exec_env(char **av, int index, char **env_cpy, char **env)
 		ft_putstr(": command not found\n");
 		exit(0);
 	}
+	ft_free_tab(all_path);
+	ft_free_tab(exec_arg);
 }
 
 void	display_env(char **env, char **av)
 {
-	int             i;
-    char    		**env_cpy;
-    int     		j;
-    int             nb_ex;
+	int		i;
+	char	**env_cpy;
+	int		j;
+   int             nb_ex;
 
     nb_ex = 0;
-    i = 1;
-    j = -1;
-    env_cpy = cpy_env(env, 0);
+	i = 1;
+	j = -1;
+	env_cpy = cpy_env(env, 0);
 	if (ft_strcmp(av[0], "env") == 0 && !av[1])
-		display_table(env);
-   else
-   {
+		display_table(env_cpy);
+	else
+	{
 		while (av[i])
 		{
-            if ((av[i][0] == '-' && !av[i][1]) || ft_strcmp(av[i], "-i") == 0)
-            {
-                    while (env_cpy[++j])
-                            ft_strdel(&env_cpy[j]);
-            }
-            else if (ft_strchr(av[i], '=') != 0)
-                    env_cpy = add_var_env(av[i], env_cpy);
-            else
-            {
-                    exec_env(av, i, env_cpy, env);
-                    nb_ex++;
-            }
-            i++;
+			if (i == 1
+			&& ((av[i][0] == '-' && !av[i][1]) || ft_strcmp(av[i], "-i") == 0))
+			{
+				while (env_cpy[++j])
+					ft_strdel(&env_cpy[j]);
+			}
+			else if (ft_strchr(av[i], '=') != 0)
+				env_cpy = add_var_env(av[i], env_cpy);
+			else
+			{
+				exec_env(av, i, env_cpy, env);
+				nb_ex++;
+				while (av[i + 1])
+					i++;
+			}
+			i++;
 		}
 		if (nb_ex == 0)
-			exec_env(av, 0, env_cpy, env);
-   }
+			display_table(env_cpy);
+	}
+	ft_free_tab(env_cpy);
 }
 
 char	**cpy_env(char **env, int nb)

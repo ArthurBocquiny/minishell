@@ -6,7 +6,7 @@
 /*   By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/20 12:52:38 by arbocqui          #+#    #+#             */
-/*   Updated: 2020/02/25 19:57:07 by arbocqui         ###   ########.fr       */
+/*   Updated: 2020/02/26 15:54:15 by arbocqui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,10 @@ int		display_command(char **av, char *right_path, char **env)
 {
 	pid_t	pid;
 	char	*binary_path;
+	char	*tmp;
 
-	binary_path = ft_strjoin(right_path, "/");
-	binary_path = ft_strjoin(binary_path, av[0]);
+	tmp = ft_strjoin(right_path, "/");
+	binary_path = ft_strjoin(tmp, av[0]);
 	pid = fork();
 	if (pid < 0)
 		exit(0);
@@ -40,6 +41,8 @@ int		display_command(char **av, char *right_path, char **env)
 		if (execve(binary_path, av, env) == -1 && execve(av[0], av, env) == -1)
 			return(0);
 	}
+	ft_strdel(&binary_path);
+	ft_strdel(&tmp);
 	return (1);
 }
 
