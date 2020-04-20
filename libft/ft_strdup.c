@@ -6,7 +6,7 @@
 /*   By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/08 15:02:32 by arbocqui          #+#    #+#             */
-/*   Updated: 2018/12/04 17:53:56 by arbocqui         ###   ########.fr       */
+/*   Updated: 2020/02/27 12:33:51 by arbocqui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*ft_strdup(const char *s)
 	d = NULL;
 	i = 0;
 	len = ft_strlen(s);
-	if (!(d = (char*)malloc(sizeof(char) * len + 1)))
+	if (!(d = (char*)malloc(sizeof(char) * (len + 1))))
 		return (0);
 	while (s[i])
 	{

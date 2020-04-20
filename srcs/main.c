@@ -6,7 +6,7 @@
 /*   By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/11 17:22:05 by arbocqui          #+#    #+#             */
-/*   Updated: 2020/02/26 20:13:51 by arbocqui         ###   ########.fr       */
+/*   Updated: 2020/02/27 19:42:29 by arbocqui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*cpy_exceptfirst(char *arg)
 
 	i = 1;
 	j = 0;
-	if (!(new = (char*)malloc(sizeof(char) * (ft_strlen(arg) + 1))))
+	if (!(new = (char*)malloc(sizeof(char) * (ft_strlen(arg)))))
 		return (NULL);
 	while (arg[i])
 	{
@@ -50,30 +50,31 @@ char	*cpy_valuevar(char **env, char *tmp)
 	char	*new;
 	int		i;
 	int		j;
+	int		k;
 
 	i = -1;
 	j = 0;
+	k = 0;
 	new = NULL;
 	while (env[++i])
 	{
 		if (check_varenv(env[i], tmp) == 1)
 		{
-			if (!(new = (char*)malloc(sizeof(char) * (ft_strlen(env[i]) - ft_strlen(tmp)))))
+			if (!(new = (char*)malloc(sizeof(char) * (ft_strlen(env[i]) - (ft_strlen(tmp))))))
 				return (NULL);
-			while (*env[i] != '=')
-				env[i]++;
-			env[i]++;
-			while (*env[i])
+			while (env[i][k] != '=')
+				k++;
+			k++;
+			while (env[i][k])
 			{
-				new[j] = *env[i];
+				new[j] = env[i][k];
 				j++;
-				env[i]++;
+				k++;
 			}
-			ft_strdel(&tmp);
+			new[j] = '\0';
 			return (new);
 		}
 	}
-	ft_strdel(&tmp);
 	return (new);
 }
 
@@ -102,8 +103,10 @@ char	**parse_line(char *line, char **env)
 	char 	**new_arg;
 	int		i;
 	char	*tmp;
+	char	*tmp2;
 
 	tmp = NULL;
+	tmp2 = NULL;
 	i = -1;
 	line = transform_line(line);
 	new_arg = ft_strsplit(line, ' ');
@@ -123,11 +126,21 @@ char	**parse_line(char *line, char **env)
 		}
 		else if (new_arg[i][0] == '$' && new_arg[i][1])
 		{
-			tmp = cpy_exceptfirst(new_arg[i]);
+			tmp2 = cpy_exceptfirst(new_arg[i]);
 			ft_strdel(&new_arg[i]);
-			tmp = cpy_valuevar(env, tmp);
+			tmp = cpy_valuevar(env, tmp2);
 			if (tmp != NULL)
 				new_arg[i] = ft_strdup(tmp);
+			else
+			{
+				ft_putstr(tmp2);
+				ft_putstr(": Undefined variable.\n");
+				ft_strdel(&tmp2);
+				ft_free_tab(new_arg);
+				return (NULL);
+			}
+			ft_strdel(&tmp2);
+			ft_strdel(&tmp);
 		}
 	}
 	return (new_arg);
@@ -158,7 +171,7 @@ void	loop(char **env)
 		display_prompt();
 		line = read_line();
 		av = parse_line(line, env);
-		if (av[0])
+		if (av)
 		{
 			right_path = get_right_path(all_path, av[0]);
 			if (display_builtin(av, &env) == 1)
@@ -172,9 +185,8 @@ void	loop(char **env)
 			}
 		}
 		ft_strdel(&line);
-		ft_free_tab(av);
-		if (all_path)
-			ft_free_tab(all_path);
+		(av) ? ft_free_tab(av) : 0;
+		(all_path) ? ft_free_tab(all_path) : 0;
 	}
 }
 

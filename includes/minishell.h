@@ -6,7 +6,7 @@
 /*   By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/11 17:23:32 by arbocqui          #+#    #+#             */
-/*   Updated: 2020/02/26 14:09:25 by arbocqui         ###   ########.fr       */
+/*   Updated: 2020/02/27 13:28:31 by arbocqui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@
 typedef struct dirent		t_dirent;
 typedef struct stat			t_stat;
 
+# define CD_L				1
+# define CD_P				2
+
 char						**get_all_paths(char *path);
 char						*find_path(char **env);
 char						*get_right_path(char **all_path, char *binary);
@@ -40,7 +43,7 @@ void						display_line(char *line);
 int							display_command(char **av, char *right_path, char
 							**env);
 int							display_builtin(char **av, char ***env);
-void						cd_para(char *path, char ***env);
+void						cd_para(char **av, char ***env);
 
 char						**cpy_env(char **env, int nb);
 void						set_env(char ***env, char *av1, char *av2);

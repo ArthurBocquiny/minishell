@@ -6,7 +6,7 @@
 /*   By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/20 12:52:38 by arbocqui          #+#    #+#             */
-/*   Updated: 2020/02/26 15:54:15 by arbocqui         ###   ########.fr       */
+/*   Updated: 2020/02/27 18:39:07 by arbocqui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,7 @@ int		display_builtin(char **av, char ***env)
 	}
 	else if (ft_strcmp(av[0], "cd") == 0)
 	{
-		if (av[2])
-		{
-			ft_putstr("cd: Too many arguments.\n");
-			return (0);
-		}
-		cd_para(av[1], env);
+		cd_para(av, env);
 		return (1);
 	}
 	else if (ft_strcmp(av[0], "exit") == 0)

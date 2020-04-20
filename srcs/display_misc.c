@@ -6,7 +6,7 @@
 /*   By: arbocqui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/20 13:16:34 by arbocqui          #+#    #+#             */
-/*   Updated: 2020/02/25 16:47:59 by arbocqui         ###   ########.fr       */
+/*   Updated: 2020/02/27 18:35:34 by arbocqui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,41 +21,86 @@ char	*read_line(void)
 	return (res);
 }
 
-void	cd_para(char *path, char ***env)
+static int		ft_strschr(char *s, char c)
 {
-	char	*new_oldpwd;
+	int			i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == c)
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+static int		ft_stock_flags(int *flags, char *options)
+{
+	int			i;
+	int			j;
+
+	j = 1;
+	i = 0;
+	while (options[j])
+	{
+		if ((i = ft_strschr("LP", options[j])) == -1)
+		{
+			ft_putstr("cd: cd [ -P | -L ] [ args ].\n");
+			return (-1);
+		}
+		*flags |= (1 << i);
+		j++;
+	}
+	return (0);
+}
+
+int				ft_parsing(int ac, char **f_names, int *flags)
+{
+	int			i;
+
+	i = 0;
+	while (++i < ac && f_names[i][0] == '-' && f_names[i][1])
+	{
+		if (ft_stock_flags(flags, f_names[i]) == -1)
+			return (-1);
+	}
+	return (i);
+}
+
+void	change_dir(char *path, char ****env, char *new_oldpwd)
+{
 	char	*new_pwd;
 
-	new_oldpwd = getcwd(NULL, 0);
 	new_pwd = NULL;
-	if (path == NULL)
+	if (chdir(path) == -1)
+		ft_error("cd", path);
+	set_env(*env, "OLDPWD", new_oldpwd);
+	new_pwd = getcwd(NULL, 0);
+	set_env(*env, "PWD", new_pwd);
+	ft_strdel(&new_pwd);
+}
+
+void	cd_para(char **av, char ***env)
+{
+	int		i;
+	int		flags;
+	char	*new_oldpwd;
+
+	i = 0;
+	new_oldpwd = getcwd(NULL, 0);
+	if ((i = ft_parsing(len_tab(av), av, &flags)) == -1)
 	{
-		if (chdir(find_home(*env)) == -1)
-			ft_error("cd", find_home(*env));
-		set_env(env, "OLDPWD", new_oldpwd);
 		ft_strdel(&new_oldpwd);
-		new_pwd = getcwd(NULL, 0);
-		set_env(env, "PWD", new_pwd);
-		ft_strdel(&new_pwd);
+		return ;
 	}
-	else if (ft_strcmp(path, "-") == 0)
-	{
-		if (chdir(find_oldpwd(*env)) == -1)
-			ft_error("cd", find_oldpwd(*env));
-		set_env(env, "OLDPWD", new_oldpwd);
-		ft_strdel(&new_oldpwd);
-		new_pwd = getcwd(NULL, 0);
-		set_env(env, "PWD", new_pwd);
-		ft_strdel(&new_pwd);
-	}
+	if (!av[1])
+		change_dir(find_home(*env), &env, new_oldpwd);
+	else if (av[i] && ft_strcmp(av[i], "-") == 0)
+		change_dir(find_oldpwd(*env), &env, new_oldpwd);
+	else if (av[i])
+		change_dir(av[i], &env, new_oldpwd);
 	else
-	{
-		if (chdir(path) == -1)
-			ft_error("cd", path);
-		set_env(env, "OLDPWD", new_oldpwd);
-		ft_strdel(&new_oldpwd);
-		new_pwd = getcwd(NULL, 0);
-		set_env(env, "PWD", new_pwd);
-		ft_strdel(&new_pwd);
-	}
+		change_dir(find_home(*env), &env, new_oldpwd);
+	ft_strdel(&new_oldpwd);
 }
